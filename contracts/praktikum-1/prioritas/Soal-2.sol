@@ -7,13 +7,13 @@ contract StudentScore {
 
     if (_score >= 80 && _score <= 100) {
         predicate = "A";
-    } else if (_score >= 65 && _score <= 79) {
+    } else if (_score >= 65) {
         predicate = "B";
-    } else if (_score >= 50 && _score <= 64) {
+    } else if (_score >= 50) {
         predicate = "C";
-    } else if (_score >= 35 && _score <= 49) {
+    } else if (_score >= 35) {
         predicate = "D";
-    } else if (_score >= 0 && _score <= 34) {
+    } else if (_score >= 0) {
         predicate = "E";
     }
     
