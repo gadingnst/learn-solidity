@@ -54,14 +54,6 @@ contract SimpleAuction {
         _;
     }
 
-    function getListBidder(uint[] memory _ids) public view returns(Bidder[] memory) {
-        Bidder[] memory result = new Bidder[](_ids.length);
-        for (uint i = 0; i < _ids.length; i++) {
-            result[i] = bidders[_ids[i]];
-        }
-        return result;
-    }
-
     function openBid(string memory _name, uint _startPrice) public {
         require(_startPrice > 0, "Start price must be greater than 0.");
         Product memory newProduct;
@@ -84,7 +76,7 @@ contract SimpleAuction {
         bidderId++;
     }
 
-    function endBid(uint _productId) public {
+    function closeBid(uint _productId) public {
         Product memory product = products[_productId]; 
         require(msg.sender == product.seller, "You're not a seller in this product.");
 
@@ -122,7 +114,7 @@ contract SimpleAuction {
         owner.transfer(calculatePercentage(address(this).balance, 70));
     }
 
-    function calculatePercentage(uint256 _amount, uint256 _percentage) private pure returns (uint256) {
-        return _amount.mul(_percentage).div(100);
+    function calculatePercentage(uint256 _amount, uint256 _percent) private pure returns (uint256) {
+        return _amount.mul(_percent).div(100);
     }
 }
