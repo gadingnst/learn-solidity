@@ -89,7 +89,7 @@ contract SimpleAuction {
         bidderId++;
     }
 
-    function endBid(uint _productId) public payable {
+    function endBid(uint _productId) public {
         Product memory product = products[_productId]; 
         require(msg.sender == product.seller, "You're not a seller in this product.");
 
