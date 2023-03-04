@@ -20,29 +20,24 @@ contract SimpleAuction {
         bool ongoing;
     }
 
+    address payable private owner;
     Product[] public products;
     Bidder[] public bidders;
     uint private productId = 0;
     uint private bidderId = 0;
 
-    event BidStarted(
-        address indexed productSeller,
-        uint productId,
-        uint productStartPrice
-    );
+    event BidStarted(address indexed productSeller, uint productId, uint productStartPrice);
+    event BidAdded(address indexed bidder, uint productId, uint bid);
+    event BidEnded(address indexed productSeller, uint productId, address indexed winnerBidder, uint winnerBid);
+    event OnReceive(address indexed sender, uint value);
 
-    event BidAdded(
-        address indexed bidder,
-        uint productId,
-        uint bid
-    );
+    constructor() {
+        owner = payable(msg.sender);
+    }
 
-    event BidEnded(
-        address indexed productSeller,
-        uint productId,
-        address indexed winnerBidder,
-        uint winnerBid
-    );
+    receive() external payable {
+        emit OnReceive(msg.sender, msg.value);
+    }
 
     modifier checkBidder(uint _productId) {
         Product storage product = products[_productId];
@@ -119,6 +114,12 @@ contract SimpleAuction {
         }
 
         emit BidEnded(product.seller, _productId, approvedBidder.bidderAddress, approvedBidder.bid);
+    }
+
+    function withdraw() public payable {
+        require(msg.sender == owner, "You must the owner to trigger this function.");
+        require(address(this).balance > 1000000000000000000, "Insufficient funds. Smart Contract balance is below from minimum withdrawal balance");
+        owner.transfer(calculatePercentage(address(this).balance, 70));
     }
 
     function calculatePercentage(uint256 _amount, uint256 _percentage) private pure returns (uint256) {
